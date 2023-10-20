@@ -1,52 +1,59 @@
 import java.text.NumberFormat;
 import java.util.*;
 
+
 public class StatementPrinter {
 
-  public String print(Invoice invoice, HashMap<String, Play> plays) {
-    int totalAmount = 0;
-    int volumeCredits = 0;
-    StringBuffer result = new StringBuffer();
+    public String print(Invoice invoice, HashMap<String, Play> plays) {
+        int totalAmount = 0; // To store the total amount
+        int volumeCredits = 0; // To store the total volume credits
+        StringBuilder result = new StringBuilder(); // Efficiently build the final statement
 
-    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    result.append(String.format("Statement for %s\n", invoice.customer));
+        // Create the statement header
+        result.append(String.format("Statement for %s\n", invoice.customer));
 
-    for (Performance perf : invoice.performances) {
-      Play play = plays.get(perf.playID);
-      int thisAmount = 0;
+        for (Performance performance : invoice.performances) {
+            Play play = plays.get(performance.playID);
+            int thisAmount = 0; // To store the amount for the current performance
 
-      switch (play.type) {
-        case "tragedy":
-          thisAmount = 40000;
-          if (perf.audience > 30) {
-            thisAmount += 1000 * (perf.audience - 30);
-          }
-          break;
-        case "comedy":
-          thisAmount = 30000;
-          if (perf.audience > 20) {
-            thisAmount += 10000 + 500 * (perf.audience - 20);
-          }
-          thisAmount += 300 * perf.audience;
-          break;
-        default:
-          throw new Error("unknown type: " + play.type);
-      }
+            // Calculate the amount for this performance based on the type of play
+            switch (play.type) {
+                case "tragedy":
+                    thisAmount = 40000;
+                    if (performance.audience > 30) {
+                        thisAmount += 1000 * (performance.audience - 30);
+                    }
+                    break;
+                case "comedy":
+                    thisAmount = 30000;
+                    if (performance.audience > 20) {
+                        thisAmount += 10000 + 500 * (performance.audience - 20);
+                    }
+                    thisAmount += 300 * performance.audience;
+                    break;
+                default:
+                    throw new Error("Unknown type: " + play.type);
+            }
 
-      // add volume credits
-      volumeCredits += Math.max(perf.audience - 30, 0);
-      // add extra credit for every ten comedy attendees
-      if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
+            // Add volume credits based on the size of the audience
+            volumeCredits += Math.max(performance.audience - 30, 0);
+            // Add extra credits for every five comedy attendees
+            if ("comedy".equals(play.type)) {
+                volumeCredits += Math.floor(performance.audience / 5);
+            }
 
-      // append line for this order
-      result.append(String.format("  %s: %s (%s seats)\n", play.name, frmt.format(thisAmount / 100), perf.audience));
-      totalAmount += thisAmount;
+            // Create a line for this performance in the statement
+            result.append(String.format("  %s: %s (%s seats)\n", play.name, currencyFormatter.format(thisAmount / 100), performance.audience));
+            totalAmount += thisAmount;
+        }
+
+        // Add the total amount owed to the statement
+        result.append(String.format("Amount owed is %s\n", currencyFormatter.format(totalAmount / 100)));
+        // Add the total credits earned to the statement
+        result.append(String.format("You earned %s credits\n", volumeCredits));
+
+        return result.toString();
     }
-
-    result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount / 100)));
-    result.append(String.format("You earned %s credits\n", volumeCredits));
-
-    return result.toString();
-  }
 }
