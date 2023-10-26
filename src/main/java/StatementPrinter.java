@@ -45,14 +45,14 @@ public class StatementPrinter {
             }
 
             // Create a line for this performance in the statement
-            result.append(String.format("  %s: %s (%s seats)\n", play.name, currencyFormatter.format(thisAmount / 100), performance.audience));
+            result.append(String.format("  %s: %s (%s seats)\n", play.name, currencyFormatter.format(thisAmount), performance.audience));
             totalAmount += thisAmount;
         }
 
         // Add the total amount owed to the statement
-        result.append(String.format("Amount owed is %s\n", currencyFormatter.format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s\n", currencyFormatter.format(totalAmount)));
         // Add the total credits earned to the statement
-        result.append(String.format("You earned %s credits\n", volumeCredits));
+        result.append(String.format("You earned %d credits\n", volumeCredits));
 
         return result.toString();
     }
