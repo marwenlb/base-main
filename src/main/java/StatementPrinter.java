@@ -3,7 +3,7 @@ import java.util.*;
 
 
 public class StatementPrinter {
-
+    
     public String print(Invoice invoice, HashMap<String, Play> plays) {
         int totalAmount = 0; // To store the total amount
         int volumeCredits = 0; // To store the total volume credits
@@ -17,16 +17,16 @@ public class StatementPrinter {
         for (Performance performance : invoice.performances) {
             Play play = plays.get(performance.playID);
             int thisAmount = 0; // To store the amount for the current performance
-
+ 
             // Calculate the amount for this performance based on the type of play
             switch (play.type) {
-                case "tragedy":
+                case Play.TRAGEDY :
                     thisAmount = 40000;
                     if (performance.audience > 30) {
                         thisAmount += 1000 * (performance.audience - 30);
                     }
                     break;
-                case "comedy":
+                case Play.COMEDY:
                     thisAmount = 30000;
                     if (performance.audience > 20) {
                         thisAmount += 10000 + 500 * (performance.audience - 20);
@@ -40,7 +40,7 @@ public class StatementPrinter {
             // Add volume credits based on the size of the audience
             volumeCredits += Math.max(performance.audience - 30, 0);
             // Add extra credits for every five comedy attendees
-            if ("comedy".equals(play.type)) {
+            if (Play.COMEDY.equals(play.type)) {
                 volumeCredits += Math.floor(performance.audience / 5);
             }
 
@@ -56,4 +56,6 @@ public class StatementPrinter {
 
         return result.toString();
     }
+    
+
 }
