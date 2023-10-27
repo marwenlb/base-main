@@ -11,9 +11,4 @@ public class Invoice {
     
   }
   
-   public String toHTML(HashMap<String, Play> plays) {
-        HTMLStatementPrinter htmlPrinter = new HTMLStatementPrinter();
-        return htmlPrinter.print(this, plays);
-    }
-  
 }

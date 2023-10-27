@@ -2,8 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +30,14 @@ public class HTMLStatementPrinter {
             Play play = plays.get(performance.playID);
             int thisAmount = 0; // To store the amount for the current performance
             // Calculate the amount for this performance based on the type of play
-            switch (play.type) {
-                case Play.TRAGEDY :
+            switch (play.getType()) {
+                case TRAGEDY :
                     thisAmount = 40000;
                     if (performance.audience > 30) {
                         thisAmount += 1000 * (performance.audience - 30);
                     }
                     break;
-                case Play.COMEDY:
+                case COMEDY:
                     thisAmount = 30000;
                     if (performance.audience > 20) {
                         thisAmount += 10000 + 500 * (performance.audience - 20);
@@ -53,7 +51,7 @@ public class HTMLStatementPrinter {
             // Add volume credits based on the size of the audience
             volumeCredits += Math.max(performance.audience - 30, 0);
             // Add extra credits for every five comedy attendees
-            if (Play.COMEDY.equals(play.type)) {
+            if (play.getType() == Play.PlayType.COMEDY) {
                 volumeCredits += Math.floor(performance.audience / 5);
             }
 
