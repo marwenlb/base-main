@@ -1,14 +1,20 @@
 import java.util.*;
 
-public class Invoice {
+class Invoice {
+    Customer customer;
+    List<Performance> performances;
 
-  public String customer;
-  public List<Performance> performances;
+    public Invoice(Customer customer, List<Performance> performances) {
+        this.customer = customer;
+        this.performances = performances;
+    }
 
-  public Invoice(String customer, List<Performance> performances) {
-    this.customer = customer;
-    this.performances = performances;
-    
-  }
-  
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public List<Performance> getPerformances() {
+        return performances;
+    }
 }
+

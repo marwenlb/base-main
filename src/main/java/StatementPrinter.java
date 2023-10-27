@@ -8,3 +8,5 @@ public class StatementPrinter {
         return textPrinter.print(invoice, plays);
     }
 }
+
+

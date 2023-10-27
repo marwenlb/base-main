@@ -17,10 +17,11 @@ class HTMLTextPrinter implements HTMLPrinter  {
         int totalAmount = 0;
         int volumeCredits = 0;
         StringBuilder html = new StringBuilder();
+        
         html.append("<html><head><title>Invoice</title></head><body>");
 
         html.append("<h1>Invoice</h1>");
-        html.append("<p>Client: " + invoice.customer + "</p>");
+        html.append("<p>Client: " + invoice.customer.getName() + "</p>");
 
         html.append("<table border=\"1\">");
         html.append("<tr><th>Piece</th><th>Seats sold</th><th colspan='2'>Price</th></tr>");
