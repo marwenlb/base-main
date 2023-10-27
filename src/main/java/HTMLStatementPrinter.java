@@ -1,23 +1,36 @@
-import java.text.NumberFormat;
-import java.util.*;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 
 
-public class StatementPrinter {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author Labassi
+ */
+
+public class HTMLStatementPrinter {
+    private StatementPrinter statementPrinter = new StatementPrinter();
 
     public String print(Invoice invoice, HashMap<String, Play> plays) {
         int totalAmount = 0; // To store the total amount
-        int volumeCredits = 0; // To store the total volume credits
-        StringBuilder result = new StringBuilder(); // Efficiently build the final statement
+        int volumeCredits = 0; 
+        StringBuilder html = new StringBuilder();
+        html.append("<html><head><title>Invoice</title></head><body>");
 
-        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+        html.append("<h1>Invoice</h1>");
+        html.append("<p>Client: " + invoice.customer + "</p>");
 
-        // Create the statement header
-        result.append(String.format("Statement for %s\n", invoice.customer));
+        html.append("<table border=\"1\">");
+        html.append("<tr><th>Piece</th><th>Seats sold</th><th colspan='2'>Price</th></tr>");
 
         for (Performance performance : invoice.performances) {
             Play play = plays.get(performance.playID);
             int thisAmount = 0; // To store the amount for the current performance
- 
             // Calculate the amount for this performance based on the type of play
             switch (play.type) {
                 case Play.TRAGEDY :
@@ -44,18 +57,20 @@ public class StatementPrinter {
                 volumeCredits += Math.floor(performance.audience / 5);
             }
 
-            // Create a line for this performance in the statement
-            result.append(String.format("  %s: %s (%s seats)\n", play.name, currencyFormatter.format(thisAmount / 100), performance.audience));
+
+            html.append("<tr><td>" + play.name + "</td><td>" + performance.audience + "</td><td colspan='2'>$" + (thisAmount / 100.0) + "</td></tr>");
             totalAmount += thisAmount;
         }
 
-        // Add the total amount owed to the statement
-        result.append(String.format("Amount owed is %s\n", currencyFormatter.format(totalAmount / 100)));
-        // Add the total credits earned to the statement
-        result.append(String.format("You earned %s credits\n", volumeCredits));
+        html.append("<tr><td colspan='2'><b>Total Owed</b></td><td >$" + (totalAmount / 100.0) + "</td></tr>");
+        html.append("<tr><td colspan='2'><b>Volume Credits</b></td><td>" + volumeCredits + "</td></tr>");
 
-        return result.toString();
+        html.append("</table>");
+
+        html.append("<p>Payment is required under 30 days. We can break your knees if you don't do so.</p>");
+
+        html.append("</body></html>");
+        return html.toString();
     }
-    
-
 }
+
